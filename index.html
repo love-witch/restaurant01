@@ -8,7 +8,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700;900&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.min.css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -39,7 +39,7 @@
 
   --serif: 'Noto Serif KR', serif;
   --sans:  'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-  --impact:'Black Han Sans', var(--sans);
+  --impact:var(--sans);
 
   --ease-soft: cubic-bezier(.16,.84,.44,1);
   --ease-snap: cubic-bezier(.65,0,.35,1);
@@ -104,12 +104,54 @@ section{position:relative; width:100%;}
   padding:18px 6vw; background:rgba(255,248,236,.72); backdrop-filter:blur(10px) saturate(1.1);
   border-bottom:1px solid var(--line);
 }
-.topbar .mark{font-family:var(--impact); font-size:1.15rem; letter-spacing:.02em; color:var(--ink);}
+.topbar .mark{font-family:var(--impact); font-weight:700; font-size:1.15rem; letter-spacing:.01em; color:var(--ink);}
 .topbar .cta-mini{
   font-size:.85rem; padding:9px 20px; border:1px solid var(--ink); border-radius:100px; color:var(--ink);
   transition:all .3s var(--ease-soft);
 }
 .topbar .cta-mini:hover{background:var(--coral); border-color:var(--coral); color:var(--cream-text);}
+
+/* ---------- 햄버거 버튼 + 전체 내비게이션 오버레이 ---------- */
+.topbar-actions{display:flex; align-items:center; gap:12px;}
+.hamburger{
+  width:40px; height:40px; border-radius:50%; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:5px; transition:background .3s;
+}
+.hamburger:hover{background:rgba(46,42,34,.07);}
+.hamburger span{
+  display:block; width:19px; height:2px; background:var(--ink); border-radius:2px;
+  transition:transform .4s var(--ease-soft), opacity .25s var(--ease-soft);
+}
+.hamburger.active span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.active span:nth-child(2){opacity:0;}
+.hamburger.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+.fullnav{
+  position:fixed; inset:0; z-index:600;
+  background:rgba(255,248,236,.97); backdrop-filter:blur(16px) saturate(1.1);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; visibility:hidden; transform:translateY(-14px);
+  transition:opacity .4s var(--ease-soft), transform .4s var(--ease-soft), visibility 0s linear .4s;
+}
+.fullnav.open{
+  opacity:1; visibility:visible; transform:translateY(0);
+  transition:opacity .4s var(--ease-soft), transform .4s var(--ease-soft);
+}
+.fullnav ul{list-style:none; text-align:center;}
+.fullnav li{margin:12px 0; opacity:0; transform:translateY(14px); transition:all .5s var(--ease-soft);}
+.fullnav.open li{opacity:1; transform:translateY(0);}
+.fullnav li:nth-child(1){transition-delay:.03s;} .fullnav li:nth-child(2){transition-delay:.06s;}
+.fullnav li:nth-child(3){transition-delay:.09s;} .fullnav li:nth-child(4){transition-delay:.12s;}
+.fullnav li:nth-child(5){transition-delay:.15s;} .fullnav li:nth-child(6){transition-delay:.18s;}
+.fullnav li:nth-child(7){transition-delay:.21s;} .fullnav li:nth-child(8){transition-delay:.24s;}
+.fullnav li:nth-child(9){transition-delay:.27s;} .fullnav li:nth-child(10){transition-delay:.3s;}
+.fullnav li:nth-child(11){transition-delay:.33s;}
+.fullnav a{
+  font-family:var(--serif); font-weight:600; font-size:clamp(1.5rem,3.6vw,2.5rem);
+  color:var(--ink); transition:color .3s;
+}
+.fullnav a:hover{color:var(--coral);}
+@media(max-width:560px){ .fullnav li{margin:9px 0;} }
 
 /* ============================================================
    HERO — 가로 스크롤 핀 배너
@@ -120,14 +162,20 @@ section{position:relative; width:100%;}
   display:flex; align-items:center;
 }
 .hero-bg{position:absolute; inset:0; z-index:0; background:var(--cream);}
-#emberCanvas{width:100%; height:100%; display:block;}
+.hero-photo{
+  position:absolute; inset:0;
+  background-image:url('https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=1600&auto=format&fit=crop');
+  background-size:cover; background-position:center 38%;
+}
+#emberCanvas{width:100%; height:100%; display:block; position:relative;}
 .hero-bg::before{
   content:''; position:absolute; inset:0;
   background:
-    radial-gradient(ellipse 65% 55% at 20% 95%, rgba(239,90,51,.16), transparent 60%),
-    radial-gradient(ellipse 55% 50% at 85% 10%, rgba(76,140,80,.14), transparent 60%),
-    radial-gradient(ellipse 50% 45% at 90% 85%, rgba(227,167,59,.14), transparent 60%),
-    linear-gradient(180deg, rgba(255,248,236,.15), rgba(255,248,236,.55) 85%);
+    linear-gradient(100deg, rgba(255,248,236,.94) 0%, rgba(255,248,236,.74) 32%, rgba(255,248,236,.32) 54%, rgba(255,248,236,.08) 70%, transparent 82%),
+    radial-gradient(ellipse 65% 55% at 20% 95%, rgba(239,90,51,.14), transparent 60%),
+    radial-gradient(ellipse 55% 50% at 85% 10%, rgba(76,140,80,.12), transparent 60%),
+    radial-gradient(ellipse 50% 45% at 90% 85%, rgba(227,167,59,.12), transparent 60%),
+    linear-gradient(180deg, rgba(255,248,236,.1) 0%, rgba(255,248,236,.15) 60%, rgba(255,248,236,.5) 100%);
   z-index:1;
 }
 .hero-track{
@@ -142,7 +190,7 @@ section{position:relative; width:100%;}
   font-family:var(--serif); font-size:1.05rem; color:var(--coral); margin-bottom:22px; font-style:italic;
 }
 .hero-title{
-  font-family:var(--impact); line-height:.98; letter-spacing:-.01em;
+  font-family:var(--impact); font-weight:800; line-height:1.04; letter-spacing:-.01em;
   font-size:clamp(3.2rem, 9.5vw, 8.4rem);
   color:var(--ink);
 }
@@ -383,7 +431,7 @@ section{position:relative; width:100%;}
     linear-gradient(135deg, var(--coral) 0%, #E8492A 55%, #D93F22 100%);
 }
 .contact-title{
-  font-family:var(--impact); font-size:clamp(2.6rem,7vw,6rem); line-height:1.05; letter-spacing:-.01em;
+  font-family:var(--impact); font-weight:800; font-size:clamp(2.6rem,7vw,6rem); line-height:1.1; letter-spacing:-.01em;
   color:var(--cream-text);
 }
 .contact-title .accent{color:var(--ink);}
@@ -409,7 +457,7 @@ section{position:relative; width:100%;}
    ============================================================ */
 footer{background:var(--cream); border-top:1px solid var(--line); padding:44px 0;}
 .foot-row{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;}
-.foot-row .mark{font-family:var(--impact); font-size:1.1rem; color:var(--ink);}
+.foot-row .mark{font-family:var(--impact); font-weight:700; font-size:1.1rem; color:var(--ink);}
 .foot-row .links{display:flex; gap:26px; font-size:.85rem; color:var(--ink-soft);}
 .foot-row .copy{font-size:.78rem; color:var(--ink-soft);}
 
@@ -450,8 +498,29 @@ footer{background:var(--cream); border-top:1px solid var(--line); padding:44px 0
 
 <div class="topbar">
   <div class="mark">제철 JECHUL</div>
-  <a href="#contact" class="cta-mini">문의하기</a>
+  <div class="topbar-actions">
+    <button class="hamburger" id="hamburgerBtn" aria-label="전체 메뉴 열기" aria-expanded="false" aria-controls="fullnav">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="#contact" class="cta-mini">문의하기</a>
+  </div>
 </div>
+
+<nav class="fullnav" id="fullnav" aria-hidden="true">
+  <ul>
+    <li><a href="#hero">처음</a></li>
+    <li><a href="#concept">브랜드 컨셉</a></li>
+    <li><a href="#menu">시그니처 메뉴</a></li>
+    <li><a href="#history">브랜드 히스토리</a></li>
+    <li><a href="#performance">실적</a></li>
+    <li><a href="#portfolio">포트폴리오</a></li>
+    <li><a href="#chef">셰프 소개</a></li>
+    <li><a href="#testimonials">고객 후기</a></li>
+    <li><a href="#press">미디어 &amp; 수상</a></li>
+    <li><a href="#locations">지점 안내</a></li>
+    <li><a href="#contact">문의</a></li>
+  </ul>
+</nav>
 
 <nav class="dotnav" id="dotnav">
   <button data-target="#hero" data-label="처음"></button>
@@ -467,6 +536,7 @@ footer{background:var(--cream); border-top:1px solid var(--line); padding:44px 0
 <section id="hero">
   <div class="hero-pin">
     <div class="hero-bg">
+      <div class="hero-photo"></div>
       <canvas id="emberCanvas"></canvas>
     </div>
 
@@ -779,6 +849,28 @@ footer{background:var(--cream); border-top:1px solid var(--line); padding:44px 0
 </footer>
 
 <script>
+/* ===================== 햄버거 버튼 - 전체 내비게이션 ===================== */
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const fullnav = document.getElementById('fullnav');
+function toggleFullnav(forceOpen){
+  const willOpen = forceOpen !== undefined ? forceOpen : !fullnav.classList.contains('open');
+  fullnav.classList.toggle('open', willOpen);
+  hamburgerBtn.classList.toggle('active', willOpen);
+  hamburgerBtn.setAttribute('aria-expanded', String(willOpen));
+  fullnav.setAttribute('aria-hidden', String(!willOpen));
+  document.body.style.overflow = willOpen ? 'hidden' : '';
+}
+hamburgerBtn.addEventListener('click', ()=> toggleFullnav());
+fullnav.querySelectorAll('a').forEach(a=>{
+  a.addEventListener('click', (e)=>{
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    toggleFullnav(false);
+    setTimeout(()=>{ target.scrollIntoView({behavior:'smooth'}); }, 250);
+  });
+});
+document.addEventListener('keydown', e=>{ if(e.key === 'Escape') toggleFullnav(false); });
+
 /* ===================== 커스텀 커서 ===================== */
 const cursor = document.getElementById('cursor');
 if(window.matchMedia('(hover:hover) and (pointer:fine)').matches){
