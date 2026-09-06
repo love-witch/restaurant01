@@ -151,6 +151,41 @@ section{position:relative; width:100%;}
   color:var(--ink); transition:color .3s;
 }
 .fullnav a:hover{color:var(--coral);}
+
+/* ---------- 이미지 상세보기 모달 ---------- */
+.modal-img, .modal-trigger{cursor:pointer;}
+.img-modal{
+  position:fixed; inset:0; z-index:800; display:flex; align-items:center; justify-content:center; padding:5vw;
+  opacity:0; visibility:hidden; transition:opacity .35s var(--ease-soft), visibility 0s linear .35s;
+}
+.img-modal.open{opacity:1; visibility:visible; transition:opacity .35s var(--ease-soft);}
+.img-modal-backdrop{position:absolute; inset:0; background:rgba(28,24,18,.72); backdrop-filter:blur(6px);}
+.img-modal-panel{
+  position:relative; z-index:1; width:min(920px,100%); max-height:88vh; overflow:auto;
+  background:var(--cream); border-radius:14px; display:grid; grid-template-columns:1.3fr 1fr;
+  transform:translateY(18px) scale(.98); transition:transform .4s var(--ease-soft);
+  box-shadow:0 60px 100px -40px rgba(0,0,0,.5);
+}
+.img-modal.open .img-modal-panel{transform:translateY(0) scale(1);}
+.img-modal-media{background:#000; min-height:260px;}
+.img-modal-media img{width:100%; height:100%; object-fit:cover; display:block; min-height:260px;}
+.img-modal-body{padding:38px 34px; display:flex; flex-direction:column; justify-content:center;}
+.img-modal-tag{
+  display:inline-block; width:fit-content; background:var(--coral); color:var(--cream-text); font-size:.72rem;
+  padding:5px 12px; border-radius:100px; font-family:var(--serif); margin-bottom:16px;
+}
+.img-modal-body h3{font-family:var(--serif); font-size:1.5rem; color:var(--ink); margin-bottom:14px; line-height:1.35;}
+.img-modal-body p{color:var(--ink-soft); font-size:.96rem; line-height:1.8;}
+.img-modal-close{
+  position:absolute; top:16px; right:16px; z-index:2; width:36px; height:36px; border-radius:50%;
+  background:rgba(28,24,18,.55); color:#fff; font-size:1.3rem; line-height:1; display:flex; align-items:center;
+  justify-content:center; transition:background .3s;
+}
+.img-modal-close:hover{background:var(--coral);}
+@media(max-width:700px){
+  .img-modal-panel{grid-template-columns:1fr; max-height:90vh;}
+  .img-modal-media, .img-modal-media img{min-height:220px;}
+}
 @media(max-width:560px){ .fullnav li{margin:9px 0;} }
 
 /* ============================================================
@@ -496,13 +531,26 @@ footer{background:var(--cream); border-top:1px solid var(--line); padding:44px 0
 <div class="grain"></div>
 <div class="cursor" id="cursor"></div>
 
+<div class="img-modal" id="imgModal" aria-hidden="true">
+  <div class="img-modal-backdrop" data-close></div>
+  <div class="img-modal-panel">
+    <button class="img-modal-close" data-close aria-label="닫기">×</button>
+    <div class="img-modal-media"><img id="imgModalImg" src="" alt=""></div>
+    <div class="img-modal-body">
+      <span class="img-modal-tag" id="imgModalTag"></span>
+      <h3 id="imgModalTitle"></h3>
+      <p id="imgModalDesc"></p>
+    </div>
+  </div>
+</div>
+
 <div class="topbar">
   <div class="mark">제철 JECHUL</div>
   <div class="topbar-actions">
+    <a href="#contact" class="cta-mini">문의하기</a>
     <button class="hamburger" id="hamburgerBtn" aria-label="전체 메뉴 열기" aria-expanded="false" aria-controls="fullnav">
       <span></span><span></span><span></span>
     </button>
-    <a href="#contact" class="cta-mini">문의하기</a>
   </div>
 </div>
 
@@ -556,7 +604,7 @@ footer{background:var(--cream); border-top:1px solid var(--line); padding:44px 0
       <div class="hero-frame">
         <div class="hero-dish">
           <figure>
-            <img src="https://images.unsplash.com/photo-1547592166-23ac45744acd?q=80&w=900&auto=format&fit=crop" alt="제철 대표 메뉴">
+            <img class="modal-img" src="https://images.unsplash.com/photo-1547592166-23ac45744acd?q=80&w=1400&auto=format&fit=crop" alt="제철 대표 메뉴" data-tag="시그니처" data-title="가을 버섯 연포탕" data-desc="지금 이 계절의 맛을 확인하세요. 지리산 표고와 능이버섯을 맑은 육수에 우려 낸 절기 대표 메뉴입니다.">
           </figure>
           <div class="txt">
             <p class="hero-eyebrow">시그니처</p>
@@ -619,27 +667,27 @@ footer{background:var(--cream); border-top:1px solid var(--line); padding:44px 0
 
   <div class="menu-scroller" id="menuScroller">
     <div class="menu-card reveal">
-      <figure><span class="season">입추</span><img src="https://images.unsplash.com/photo-1580959375944-abd7e991f971?q=80&w=800&auto=format&fit=crop" alt="가을 전어 상"></figure>
+      <figure><span class="season">입추</span><img class="modal-img" src="https://images.unsplash.com/photo-1580959375944-abd7e991f971?q=80&w=1400&auto=format&fit=crop" alt="가을 전어 상" data-tag="입추" data-title="가을 전어 상" data-desc="남해에서 아침에 올라온 전어로 짓는 계절 초회와 구이 한 상."></figure>
       <h3>가을 전어 상</h3>
       <p>남해에서 아침에 올라온 전어로 짓는 계절 초회와 구이 한 상.</p>
     </div>
     <div class="menu-card reveal">
-      <figure><span class="season">처서</span><img src="https://images.unsplash.com/photo-1553163147-622ab57be1c7?q=80&w=800&auto=format&fit=crop" alt="송이 삼합"></figure>
+      <figure><span class="season">처서</span><img class="modal-img" src="https://images.unsplash.com/photo-1553163147-622ab57be1c7?q=80&w=1400&auto=format&fit=crop" alt="송이 삼합" data-tag="처서" data-title="송이 삼합" data-desc="지리산 자연송이와 한우 등심, 표고를 함께 구워내는 절기 별미."></figure>
       <h3>송이 삼합</h3>
       <p>지리산 자연송이와 한우 등심, 표고를 함께 구워내는 절기 별미.</p>
     </div>
     <div class="menu-card reveal">
-      <figure><span class="season">백로</span><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=800&auto=format&fit=crop" alt="연포탕"></figure>
+      <figure><span class="season">백로</span><img class="modal-img" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1400&auto=format&fit=crop" alt="연포탕" data-tag="백로" data-title="가을 낙지 연포탕" data-desc="서해 낙지와 가을 무로 맑게 끓인 계절 탕. 국물부터 다릅니다."></figure>
       <h3>가을 낙지 연포탕</h3>
       <p>서해 낙지와 가을 무로 맑게 끓인 계절 탕. 국물부터 다릅니다.</p>
     </div>
     <div class="menu-card reveal">
-      <figure><span class="season">추분</span><img src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=800&auto=format&fit=crop" alt="가지찜"></figure>
+      <figure><span class="season">추분</span><img class="modal-img" src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=1400&auto=format&fit=crop" alt="가지찜" data-tag="추분" data-title="가을 가지찜 정식" data-desc="제철 가지와 표고, 견과를 올린 담백한 찜 정식 한 상."></figure>
       <h3>가을 가지찜 정식</h3>
       <p>제철 가지와 표고, 견과를 올린 담백한 찜 정식 한 상.</p>
     </div>
     <div class="menu-card reveal">
-      <figure><span class="season">한로</span><img src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?q=80&w=800&auto=format&fit=crop" alt="대하구이"></figure>
+      <figure><span class="season">한로</span><img class="modal-img" src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?q=80&w=1400&auto=format&fit=crop" alt="대하구이" data-tag="한로" data-title="가을 대하 소금구이" data-desc="서해 대하를 통째로 구워 계절 마지막 여름 향을 담았습니다."></figure>
       <h3>가을 대하 소금구이</h3>
       <p>서해 대하를 통째로 구워 계절 마지막 여름 향을 담았습니다.</p>
     </div>
@@ -710,22 +758,22 @@ footer{background:var(--cream); border-top:1px solid var(--line); padding:44px 0
 
     <div class="folio-grid">
       <div class="item reveal">
-        <div class="folio-item"><img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?q=80&w=1200&auto=format&fit=crop" alt="제철 서울 본점">
+        <div class="folio-item modal-trigger" data-tag="지점" data-title="서울 본점 · 합정" data-desc="제철이 처음 문을 연 자리, 원형을 가장 가까이 담은 공간"><img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?q=80&w=1400&auto=format&fit=crop" alt="제철 서울 본점">
           <div class="folio-caption"><h3>서울 본점 · 합정</h3><p>제철이 처음 문을 연 자리, 원형을 가장 가까이 담은 공간</p></div>
         </div>
       </div>
       <div class="item reveal">
-        <div class="folio-item"><img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=800&auto=format&fit=crop" alt="제철 부산점">
+        <div class="folio-item modal-trigger" data-tag="지점" data-title="부산 해운대점" data-desc="남해 재료를 가장 먼저 받는 지점"><img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=1400&auto=format&fit=crop" alt="제철 부산점">
           <div class="folio-caption"><h3>부산 해운대점</h3><p>남해 재료를 가장 먼저 받는 지점</p></div>
         </div>
       </div>
       <div class="item reveal">
-        <div class="folio-item"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800&auto=format&fit=crop" alt="제철 대구점">
+        <div class="folio-item modal-trigger" data-tag="지점" data-title="대구 수성점" data-desc="내륙 산지 재료 중심의 계절 메뉴 운영"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1400&auto=format&fit=crop" alt="제철 대구점">
           <div class="folio-caption"><h3>대구 수성점</h3><p>내륙 산지 재료 중심의 계절 메뉴 운영</p></div>
         </div>
       </div>
       <div class="item reveal">
-        <div class="folio-item"><img src="https://images.unsplash.com/photo-1541542684-4a9c2eb0d38b?q=80&w=800&auto=format&fit=crop" alt="제철 대전점">
+        <div class="folio-item modal-trigger" data-tag="지점" data-title="대전 둔산점" data-desc="중부권 첫 직영 지점"><img src="https://images.unsplash.com/photo-1541542684-4a9c2eb0d38b?q=80&w=1400&auto=format&fit=crop" alt="제철 대전점">
           <div class="folio-caption"><h3>대전 둔산점</h3><p>중부권 첫 직영 지점</p></div>
         </div>
       </div>
@@ -737,8 +785,8 @@ footer{background:var(--cream); border-top:1px solid var(--line); padding:44px 0
 <section id="chef">
   <div class="wrap">
     <div class="chef-grid">
-      <div class="chef-portrait reveal">
-        <img src="https://images.unsplash.com/photo-1583394293214-28ded15ee548?q=80&w=900&auto=format&fit=crop" alt="제철 총괄 셰프">
+      <div class="chef-portrait reveal modal-trigger" data-tag="총괄 셰프" data-title="김도윤" data-desc="15년간 한식 코스 요리를 연구하며, 재료가 요리를 결정하는 방식으로 주방을 운영합니다.">
+        <img src="https://images.unsplash.com/photo-1583394293214-28ded15ee548?q=80&w=1400&auto=format&fit=crop" alt="제철 총괄 셰프">
       </div>
       <div class="chef-text reveal">
         <p class="role">총괄 셰프</p>
@@ -871,13 +919,47 @@ fullnav.querySelectorAll('a').forEach(a=>{
 });
 document.addEventListener('keydown', e=>{ if(e.key === 'Escape') toggleFullnav(false); });
 
+/* ===================== 이미지 상세보기 모달 ===================== */
+const imgModal = document.getElementById('imgModal');
+const imgModalImg = document.getElementById('imgModalImg');
+const imgModalTag = document.getElementById('imgModalTag');
+const imgModalTitle = document.getElementById('imgModalTitle');
+const imgModalDesc = document.getElementById('imgModalDesc');
+
+function openImgModal(el){
+  const imgEl = el.tagName === 'IMG' ? el : el.querySelector('img');
+  if(!imgEl) return;
+  imgModalImg.src = imgEl.src;
+  imgModalImg.alt = imgEl.alt || '';
+  const title = el.dataset.title || imgEl.alt || '';
+  const desc = el.dataset.desc || '';
+  const tag = el.dataset.tag || '';
+  imgModalTitle.textContent = title;
+  imgModalDesc.textContent = desc;
+  if(tag){ imgModalTag.textContent = tag; imgModalTag.style.display = 'inline-block'; }
+  else { imgModalTag.style.display = 'none'; }
+  imgModal.classList.add('open');
+  imgModal.setAttribute('aria-hidden','false');
+  document.body.style.overflow = 'hidden';
+}
+function closeImgModal(){
+  imgModal.classList.remove('open');
+  imgModal.setAttribute('aria-hidden','true');
+  document.body.style.overflow = '';
+}
+document.querySelectorAll('.modal-img, .modal-trigger').forEach(el=>{
+  el.addEventListener('click', ()=> openImgModal(el));
+});
+imgModal.querySelectorAll('[data-close]').forEach(el=> el.addEventListener('click', closeImgModal));
+document.addEventListener('keydown', e=>{ if(e.key === 'Escape') closeImgModal(); });
+
 /* ===================== 커스텀 커서 ===================== */
 const cursor = document.getElementById('cursor');
 if(window.matchMedia('(hover:hover) and (pointer:fine)').matches){
   window.addEventListener('mousemove', e=>{
     cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%,-50%)`;
   });
-  document.querySelectorAll('a, button, .menu-card, .folio-item').forEach(el=>{
+  document.querySelectorAll('a, button, .menu-card, .folio-item, .modal-img, .modal-trigger').forEach(el=>{
     el.addEventListener('mouseenter', ()=>cursor.classList.add('grow'));
     el.addEventListener('mouseleave', ()=>cursor.classList.remove('grow'));
   });
